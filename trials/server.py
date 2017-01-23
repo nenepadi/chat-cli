@@ -9,9 +9,9 @@ from persist import connection
 
 def save_message(message, user, sender):
     try:
-        with connection.cursor() as cur:
-            stmt_insert = "INSERT INTO messages (username, message, sender) VALUES (%s, %s, %s)"
-            cur.execute(stmt_insert, (user, message, sender))
+        cur = connection.cursor()
+        stmt_insert = "INSERT INTO messages (username, message, sender) VALUES (%s, %s, %s)"
+        cur.execute(stmt_insert, (user, message, sender))
         connection.commit()
     except Exception as e:
         print(e)
@@ -61,11 +61,11 @@ class ChatServer:
                                 self.broadcast_string(newstr, sock)
 
                     except:
-                        _user = sock.getpeername()
-                        status = '{} left \r\n'.format(_user)
-                        self.broadcast_string(status, sock)
-                        sock.close()
-                        del self.connectors[sock]
+                        # _user = sock.getpeername()
+                        # status = '{} left \r\n'.format(_user)
+                        # self.broadcast_string(status, sock)
+                        # sock.close()
+                        # del self.connectors[sock]
                         continue
 
     def accept_new_connection(self):
@@ -79,7 +79,7 @@ class ChatServer:
         for sock in list(self.connectors):
             if sock != self.sockserver and sock != omit_sock:
                 try:
-                    sock.send(bytes(msg, 'utf-8'))
+                    sock.send(msg.encode('utf-8'))
                 except:
                     sock.close()
                     del self.connectors[sock]
@@ -88,11 +88,11 @@ class ChatServer:
         modified_msg = '{} > {}'.format(sender, msg.lstrip())
         reciever_name = receiver
         if online:
-            receiver.send(bytes(modified_msg, 'utf-8'))
+            receiver.send(modified_msg.encode('utf-8'))
             reciever_name = self.connectors[receiver]
         save_message(msg.lstrip(), reciever_name, sender)
 
 
 if __name__ == '__main__':
-    serv_chat = ChatServer(5700)
+    serv_chat = ChatServer(7000)
     serv_chat.run()
