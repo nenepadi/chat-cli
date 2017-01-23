@@ -9,7 +9,7 @@ config = {
     'port': 3306,
     'database': 'chatcli',
     'user': 'root',
-    'password': 'wfBAT@gh',
+    'password': 'admin',
     'charset': 'utf8',
     'use_unicode': True,
     'get_warnings': True,
