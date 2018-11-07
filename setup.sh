@@ -1,6 +1,9 @@
 #!/bin/bash
 
-cp -rf /vagrant/chat-cli/ /home/vagrant/chat-cli
+mkdir -p /home/vagrant/chat-cli
+cp -rf /vagrant/chat_client.py /home/vagrant/chat-cli/
+cp -rf /vagrant/chat_server.py /home/vagrant/chat-cli/
+cp -rf /vagrant/persist.py /home/vagrant/chat-cli/
 
 VIRTUALENV_DIR=/home/vagrant/.virtualenvs/chat-cli
 PROJECT_DIR=/home/vagrant/chat-cli
@@ -18,14 +21,14 @@ apt-get install -y mysql-server
 
 # Setting up MySQL user and db
 mysql -uroot -padmin -e "CREATE DATABASE IF NOT EXISTS chatcli" >> /home/vagrant/chat-cli/vm_build.log 2>&1
-mysql -uroot -padmin -e "USE chatcli" >> /home/vagrant/cli-chat/vm_build.log 2>&1
+mysql -uroot -padmin -e "USE chatcli" >> /home/vagrant/chat-cli/vm_build.log 2>&1
 mysql -uroot -padmin -e "CREATE TABLE IF NOT EXISTS chatcli.users ( \
     id int(11) NOT NULL AUTO_INCREMENT, \
     username varchar(255) NOT NULL, \
     PRIMARY KEY (id), \
     UNIQUE (username) \
     ) \
-    AUTO_INCREMENT=1;" >> /home/vagrant/cli-chat/vm_build.log 2>&1
+    AUTO_INCREMENT=1;" >> /home/vagrant/chat-cli/vm_build.log 2>&1
 mysql -uroot -padmin -e "CREATE TABLE IF NOT EXISTS chatcli.messages ( \
     id int(11) NOT NULL AUTO_INCREMENT, \
     username varchar(255) NOT NULL, \
@@ -33,7 +36,7 @@ mysql -uroot -padmin -e "CREATE TABLE IF NOT EXISTS chatcli.messages ( \
     sender varchar(255) NOT NULL, \
     PRIMARY KEY (id) \
     ) \
-    AUTO_INCREMENT=1;" >> /home/vagrant/cli-chat/vm_build.log 2>&1
+    AUTO_INCREMENT=1;" >> /home/vagrant/chat-cli/vm_build.log 2>&1
 
 echo 'Installing and configuring virtualenvwrapper...'
 pip install --quiet virtualenvwrapper
